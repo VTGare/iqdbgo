@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/sirupsen/logrus"
@@ -32,12 +33,9 @@ func Search(file string) (*Result, error) {
 		result = &Result{nil, make([]*Match, 0)}
 	)
 
-	col.OnRequest(func(r *colly.Request) {
-		logrus.Infof("Making a request. URL: %s", r.URL)
-	})
+	col.SetRequestTimeout(30 * time.Second)
 
 	col.OnError(func(r *colly.Response, e error) {
-		logrus.Errorf("Request errored: %v", e)
 		err = e
 	})
 
